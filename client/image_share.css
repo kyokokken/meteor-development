@@ -1,0 +1,8 @@
+.thumbnail {
+	min-height: 500px;
+  max-height: 500px;
+}
+
+.caption {
+  height: 100px;
+}
