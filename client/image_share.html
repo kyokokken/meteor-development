@@ -1,15 +1,28 @@
-<head>
-	<title>image_share</title>
-</head>
-
-<body>
-  {{> image_add_form}}
-	<h1>Welcome to Coursera!</h1>
+<template name="ApplicationLayout">
+  {{> yield "navbar"}}
+  {{> yield "main"}}
+</template>
+<template name="welcome">
   <div class="container">
-    {{> images}}
+    <div class="jumbotron">
+      <h1>Welcome to Image Share {{username}}!</h1>
+      <a href="/images" class="btn btn-info">ENTER</a>
+    </div>
   </div>
-</body>
-
+</template>
+<template name="image">
+  <div class="container">
+    <h2>{{img_alt}}</h2>
+    <a href="/images"><img src="/{{img_src}}" class="single-img"/></a>
+  </div>
+</template>
+<template name="navbar">
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      {{> loginButtons}}
+    </div>
+  </nav>
+</template>
 <template name="image_add_form">
   <div class="modal fade" id="image_add_form">
     <div class="modal-dialog">
@@ -35,24 +48,36 @@
 </template>
 
 <template name="images">
-  <button class="btn btn-success js-show-image-form">Add Image</button>
-  <div class="row">
-    {{#each images}}
-    <div class="col-xs-12 col-md-3" id="{{_id}}">
-      <div class="thumbnail">
-        <img class="js-image" src="{{img_src}}" alt="{{img_alt}}"/>
-        <div class="caption">  
-          <h3>Thumbnail label</h3>
-          <p>description of the image</p>
-          <p>
-            {{> starsRating mutable=true class="js-rate-image" id=_id}}
-          </p>
-          <button class="js-del-image btn btn-danger">
-            Delete
-          </button>
+  <div class="container">
+    {{#if currentUser}}
+      <div>
+        <button class="btn btn-success js-show-image-form">Add Image</button>
+      </div>
+    {{/if}}
+    {{#if filtering_images}}
+      <h2>
+        Showing images by user {{getFilterUser}} <button class="btn btn-warning js-unset-image-filter">Remove filter</button>
+      </h2>
+    {{/if}}
+    <div class="row">
+      {{#each images}}
+      <div class="col-xs-12 col-md-3" id="{{_id}}">
+        <div class="thumbnail">
+          <a href="/image/{{_id}}"><img class="thumbnail-img" src="{{img_src}}" alt="{{img_alt}}"/></a>
+          <div class="caption">  
+            <h3>Thumbnail label</h3>
+            <p>{{img_alt}}</p>
+            <p>User: <a href="#" class="js-set-image-filter">{{getUser createdBy}}</a></p>
+            <p>
+              {{> starsRating mutable=true class="js-rate-image" id=_id}}
+            </p>
+            <button class="js-del-image btn btn-danger">
+              Delete
+            </button>
+          </div>
         </div>
       </div>
+      {{/each}}
     </div>
-    {{/each}}
   </div>
 </template>
